@@ -16,7 +16,7 @@
 
   "autoload": {
     "psr-4": {
-      "Jeango\\Database\\": ""
+      "Jeanku\\Database\\": ""
     }
   },
   "config": {
