@@ -1,14 +1,25 @@
 <?php
 
-namespace Eloquent;
+namespace Jeanku\Database\Eloquent;
 
 trait SoftDeletes
 {
 
-    protected $softDelete = true;
+    /**
+     * Boot the soft deleting trait for a model.
+     *
+     * @author gaojian
+     * @date   2017-10-26
+     * @return void
+     */
+    public static function bootSoftDeletes()                             //boot function
+    {
+        static::addGlobalScope(new SoftDeletingScope);
+    }
 
     /**
      * 获取删除列名
+     *
      * @author gaojian
      * @date   2017-10-26
      * @return string
@@ -20,6 +31,7 @@ trait SoftDeletes
 
     /**
      * 获取删除列的完整名称
+     *
      * @author gaojian
      * @date   2017-10-26
      * @return string
@@ -31,7 +43,8 @@ trait SoftDeletes
 
     /**
      * 获取表示无效的值
-     * @author gaojian
+     *
+     * @author Sinute
      * @date   2017-10-26
      * @return int
      */
@@ -42,7 +55,8 @@ trait SoftDeletes
 
     /**
      * 获取删除时间列名
-     * @author gaojian
+     *
+     * @author Sinute
      * @date   2015-04-27
      * @return string
      */
@@ -53,7 +67,8 @@ trait SoftDeletes
 
     /**
      * 获取删除时间列的完整名称
-     * @author gaojian
+     *
+     * @author Sinute
      * @date   2015-04-27
      * @return string
      */

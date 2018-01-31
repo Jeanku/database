@@ -1,17 +1,17 @@
 <?php
 
-namespace Query\Grammars;
+namespace Jeanku\Database\Query\Grammars;
 
-use Support\Str;
-use Query\Builder;
-use Query\Expression;
+use Jeanku\Database\Support\Str;
+use Jeanku\Database\Query\Builder;
+use Jeanku\Database\Query\Expression;
 
 class MySqlGrammar extends Grammar
 {
 
     /**
      * Compile a select query into SQL.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @return string
      */
     public function compileSelect(Builder $query)
@@ -46,7 +46,7 @@ class MySqlGrammar extends Grammar
 
     /**
      * Compile the lock into SQL.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  bool|string  $value
      * @return string
      */
@@ -60,7 +60,7 @@ class MySqlGrammar extends Grammar
 
     /**
      * Compile an update statement into SQL.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $values
      * @return string
      */
@@ -97,7 +97,7 @@ class MySqlGrammar extends Grammar
     /**
      * Prepares a JSON column being updated using the JSON_SET function.
      * @param  string $key
-     * @param \Expression $value
+     * @param \Jeanku\Database\Expression $value
      * @return string
      */
     protected function compileJsonUpdateColumn($key, Expression $value)
@@ -128,7 +128,7 @@ class MySqlGrammar extends Grammar
 
     /**
      * Compile a delete statement into SQL.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @return string
      */
     public function compileDelete(Builder $query)

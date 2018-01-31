@@ -1,6 +1,6 @@
 <?php
 
-namespace Query;
+namespace Jeanku\Database\Query;
 
 use Closure;
 use InvalidArgumentException;
@@ -100,7 +100,7 @@ class JoinClause
      * @param  \Closure|string  $first
      * @param  string|null  $operator
      * @param  string|null  $second
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function orOn($first, $operator = null, $second = null)
     {
@@ -114,7 +114,7 @@ class JoinClause
      * @param  string|null  $operator
      * @param  string|null  $second
      * @param  string  $boolean
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function where($first, $operator = null, $second = null, $boolean = 'and')
     {
@@ -127,7 +127,7 @@ class JoinClause
      * @param  \Closure|string  $first
      * @param  string|null  $operator
      * @param  string|null  $second
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function orWhere($first, $operator = null, $second = null)
     {
@@ -139,7 +139,7 @@ class JoinClause
      *
      * @param  string  $column
      * @param  string  $boolean
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function whereNull($column, $boolean = 'and')
     {
@@ -150,7 +150,7 @@ class JoinClause
      * Add an "or on where is null" clause to the join.
      *
      * @param  string  $column
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function orWhereNull($column)
     {
@@ -162,7 +162,7 @@ class JoinClause
      *
      * @param  string  $column
      * @param  string  $boolean
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function whereNotNull($column, $boolean = 'and')
     {
@@ -173,7 +173,7 @@ class JoinClause
      * Add an "or on where is not null" clause to the join.
      *
      * @param  string  $column
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function orWhereNotNull($column)
     {
@@ -185,7 +185,7 @@ class JoinClause
      *
      * @param  string  $column
      * @param  array  $values
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function whereIn($column, array $values)
     {
@@ -197,7 +197,7 @@ class JoinClause
      *
      * @param  string  $column
      * @param  array  $values
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function whereNotIn($column, array $values)
     {
@@ -209,7 +209,7 @@ class JoinClause
      *
      * @param  string  $column
      * @param  array  $values
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function orWhereIn($column, array $values)
     {
@@ -221,7 +221,7 @@ class JoinClause
      *
      * @param  string  $column
      * @param  array  $values
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function orWhereNotIn($column, array $values)
     {
@@ -233,7 +233,7 @@ class JoinClause
      *
      * @param  \Closure  $callback
      * @param  string   $boolean
-     * @return \Query\JoinClause
+     * @return \Jeanku\Database\Query\JoinClause
      */
     public function nest(Closure $callback, $boolean = 'and')
     {

@@ -1,31 +1,25 @@
 <?php
 
-namespace Query;
+namespace Jeanku\Database\Query;
 
 use Closure;
-use Support\Arr;
-use Support\Str;
+use Jeanku\Database\Support\Arr;
+use Jeanku\Database\Support\Str;
+use Jeanku\Database\Support\Collection;
 
 
 class Builder
 {
 
-
-    /**
-     * The model connection instance.
-     * @var \Connection
-     */
-    protected $model;
-
     /**
      * The database connection instance.
-     * @var \Connection
+     * @var \Jeanku\Database\Connection
      */
     protected $connection;
 
     /**
      * The database query grammar instance.
-     * @var \Query\Grammars\Grammar
+     * @var \Jeanku\Database\Query\Grammars\Grammar
      */
     protected $grammar;
 
@@ -164,43 +158,23 @@ class Builder
         'not similar to', 'not ilike', '~~*', '!~~*',
     ];
 
-    protected $trashed = false;
-
-
-    /**
-     * The model's attributes.
-     * @var array
-     */
-    protected $attributes = [];
-
-
     /**
      * Whether use write pdo for select.
      * @var bool
      */
     protected $useWritePdo = false;
 
-
-    /**
-     * All of the registered builder macros.
-     *
-     * @var array
-     */
-    protected $macros = [];
-
-
     /**
      * Create a new query builder instance.
      * @param  $connection
-     * @param  \Query\Grammars\Grammar  $grammar
+     * @param  \Jeanku\Database\Query\Grammars\Grammar  $grammar
      * @return void
      */
-    public function __construct($connection, $grammar)
+    public function __construct($connection = null, $grammar = null)
     {
         $this->connection = $connection;
-        $this->grammar = $grammar;
+        $this->grammar = $connection->getQueryGrammar();
     }
-
 
     /**
      * Set the columns to be selected.
@@ -217,7 +191,7 @@ class Builder
      * Add a new "raw" select expression to the query.
      * @param  string  $expression
      * @param  array   $bindings
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function selectRaw($expression, array $bindings = [])
     {
@@ -230,9 +204,9 @@ class Builder
 
     /**
      * Add a subselect expression to the query.
-     * @param  \Closure|\Query\Builder|string $query
+     * @param  \Closure|\Jeanku\Database\Query\Builder|string $query
      * @param  string  $as
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      * @throws \Exception
      */
     public function selectSub($query, $as)
@@ -288,28 +262,6 @@ class Builder
         return $this;
     }
 
-
-    /**
-     * Set model.
-     * @param  string  $model
-     * @return $this
-     */
-    public function model($model)
-    {
-        $this->model = $model;
-        return $this;
-    }
-
-
-    /**
-     * get model.
-     * @return $this model
-     */
-    public function getModel()
-    {
-        return $this->model;
-    }
-
     /**
      * Add a join clause to the query.
      * @param  string  $table
@@ -344,7 +296,7 @@ class Builder
      * @param  string  $operator
      * @param  string  $two
      * @param  string  $type
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function joinWhere($table, $one, $operator, $two, $type = 'inner')
     {
@@ -357,7 +309,7 @@ class Builder
      * @param  string  $first
      * @param  string  $operator
      * @param  string  $second
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function leftJoin($table, $first, $operator = null, $second = null)
     {
@@ -370,7 +322,7 @@ class Builder
      * @param  string  $one
      * @param  string  $operator
      * @param  string  $two
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function leftJoinWhere($table, $one, $operator, $two)
     {
@@ -384,7 +336,7 @@ class Builder
      * @param  string  $first
      * @param  string  $operator
      * @param  string  $second
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function rightJoin($table, $first, $operator = null, $second = null)
     {
@@ -398,7 +350,7 @@ class Builder
      * @param  string  $one
      * @param  string  $operator
      * @param  string  $two
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function rightJoinWhere($table, $one, $operator, $two)
     {
@@ -412,7 +364,7 @@ class Builder
      * @param  string  $first
      * @param  string  $operator
      * @param  string  $second
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function crossJoin($table, $first = null, $operator = null, $second = null)
     {
@@ -430,7 +382,7 @@ class Builder
      *
      * @param  bool  $value
      * @param  \Closure  $callback
-     * @return \Query\Builder
+     * @return \Jeanku\Database\Query\Builder
      */
     public function when($value, $callback)
     {
@@ -525,7 +477,7 @@ class Builder
      * @param  string  $column
      * @param  string  $operator
      * @param  mixed   $value
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhere($column, $operator = null, $value = null)
     {
@@ -538,7 +490,7 @@ class Builder
      * @param  string|null  $operator
      * @param  string|null  $second
      * @param  string|null  $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereColumn($first, $operator = null, $second = null, $boolean = 'and')
     {
@@ -559,7 +511,7 @@ class Builder
      * @param  string|array  $first
      * @param  string|null  $operator
      * @param  string|null  $second
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereColumn($first, $operator = null, $second = null)
     {
@@ -585,7 +537,7 @@ class Builder
      * Add a raw or where clause to the query.
      * @param  string  $sql
      * @param  array   $bindings
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereRaw($sql, array $bindings = [])
     {
@@ -612,7 +564,7 @@ class Builder
      * Add an or where between statement to the query.
      * @param  string  $column
      * @param  array   $values
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereBetween($column, array $values)
     {
@@ -624,7 +576,7 @@ class Builder
      * @param  string  $column
      * @param  array   $values
      * @param  string  $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereNotBetween($column, array $values, $boolean = 'and')
     {
@@ -636,7 +588,7 @@ class Builder
      *
      * @param  string  $column
      * @param  array   $values
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereNotBetween($column, array $values)
     {
@@ -647,7 +599,7 @@ class Builder
      * Add a nested where statement to the query.
      * @param  \Closure $callback
      * @param  string   $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereNested(Closure $callback, $boolean = 'and')
     {
@@ -658,7 +610,7 @@ class Builder
 
     /**
      * Create a new query instance for nested where condition.
-     * @return \Query\Builder
+     * @return \Jeanku\Database\Query\Builder
      */
     public function forNestedWhere()
     {
@@ -669,7 +621,7 @@ class Builder
 
     /**
      * Add another query builder as a nested where to the query builder.
-     * @param  \Query\Builder|static $query
+     * @param  \Jeanku\Database\Query\Builder|static $query
      * @param  string  $boolean
      * @return $this
      */
@@ -719,7 +671,7 @@ class Builder
      * Add an or exists clause to the query.
      * @param  \Closure $callback
      * @param  bool     $not
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereExists(Closure $callback, $not = false)
     {
@@ -730,7 +682,7 @@ class Builder
      * Add a where not exists clause to the query.
      * @param  \Closure $callback
      * @param  string   $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereNotExists(Closure $callback, $boolean = 'and')
     {
@@ -740,7 +692,7 @@ class Builder
     /**
      * Add a where not exists clause to the query.
      * @param  \Closure  $callback
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereNotExists(Closure $callback)
     {
@@ -749,7 +701,7 @@ class Builder
 
     /**
      * Add an exists clause to the query.
-     * @param  \Query\Builder $query
+     * @param  \Jeanku\Database\Query\Builder $query
      * @param  string  $boolean
      * @param  bool  $not
      * @return $this
@@ -793,7 +745,7 @@ class Builder
      * Add an "or where in" clause to the query.
      * @param  string  $column
      * @param  mixed   $values
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereIn($column, $values)
     {
@@ -805,7 +757,7 @@ class Builder
      * @param  string  $column
      * @param  mixed   $values
      * @param  string  $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereNotIn($column, $values, $boolean = 'and')
     {
@@ -816,7 +768,7 @@ class Builder
      * Add an "or where not in" clause to the query.
      * @param  string  $column
      * @param  mixed   $values
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereNotIn($column, $values)
     {
@@ -843,7 +795,7 @@ class Builder
     /**
      * Add a external sub-select to the query.
      * @param  string   $column
-     * @param  \Query\Builder|static  $query
+     * @param  \Jeanku\Database\Query\Builder|static  $query
      * @param  string   $boolean
      * @param  bool     $not
      * @return $this
@@ -873,7 +825,7 @@ class Builder
     /**
      * Add an "or where null" clause to the query.
      * @param  string  $column
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereNull($column)
     {
@@ -884,7 +836,7 @@ class Builder
      * Add a "where not null" clause to the query.
      * @param  string  $column
      * @param  string  $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereNotNull($column, $boolean = 'and')
     {
@@ -894,7 +846,7 @@ class Builder
     /**
      * Add an "or where not null" clause to the query.
      * @param  string  $column
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereNotNull($column)
     {
@@ -907,7 +859,7 @@ class Builder
      * @param  string   $operator
      * @param  int   $value
      * @param  string   $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereDate($column, $operator, $value, $boolean = 'and')
     {
@@ -919,7 +871,7 @@ class Builder
      * @param  string  $column
      * @param  string   $operator
      * @param  int   $value
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereDate($column, $operator, $value)
     {
@@ -932,7 +884,7 @@ class Builder
      * @param  string   $operator
      * @param  int   $value
      * @param  string   $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereTime($column, $operator, $value, $boolean = 'and')
     {
@@ -944,7 +896,7 @@ class Builder
      * @param  string  $column
      * @param  string   $operator
      * @param  int   $value
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orWhereTime($column, $operator, $value)
     {
@@ -957,7 +909,7 @@ class Builder
      * @param  string   $operator
      * @param  int   $value
      * @param  string   $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereDay($column, $operator, $value, $boolean = 'and')
     {
@@ -970,7 +922,7 @@ class Builder
      * @param  string   $operator
      * @param  int   $value
      * @param  string   $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereMonth($column, $operator, $value, $boolean = 'and')
     {
@@ -983,7 +935,7 @@ class Builder
      * @param  string   $operator
      * @param  int   $value
      * @param  string   $boolean
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function whereYear($column, $operator, $value, $boolean = 'and')
     {
@@ -1080,7 +1032,7 @@ class Builder
      * @param  string  $column
      * @param  string  $operator
      * @param  string  $value
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orHaving($column, $operator = null, $value = null)
     {
@@ -1106,7 +1058,7 @@ class Builder
      * Add a raw or having clause to the query.
      * @param  string  $sql
      * @param  array   $bindings
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function orHavingRaw($sql, array $bindings = [])
     {
@@ -1131,7 +1083,7 @@ class Builder
     /**
      * Add an "order by" clause for a timestamp to the query.
      * @param  string  $column
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function latest($column = 'created_at')
     {
@@ -1141,7 +1093,7 @@ class Builder
     /**
      * Add an "order by" clause for a timestamp to the query.
      * @param  string  $column
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function oldest($column = 'created_at')
     {
@@ -1188,7 +1140,7 @@ class Builder
     /**
      * Alias to set the "offset" value of the query.
      * @param  int  $value
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function skip($value)
     {
@@ -1212,7 +1164,7 @@ class Builder
     /**
      * Alias to set the "limit" value of the query.
      * @param  int  $value
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function take($value)
     {
@@ -1223,19 +1175,36 @@ class Builder
      * Set the limit and offset for a given page.
      * @param  int  $page
      * @param  int  $perPage
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function forPage($page, $perPage = 15)
     {
         return $this->skip(($page - 1) * $perPage)->take($perPage);
     }
 
+    /**
+     * Constrain the query to the next "page" of results after a given ID.
+     * @param  int  $perPage
+     * @param  int  $lastId
+     * @param  string  $column
+     * @return \Jeanku\Database\Query\Builder|static
+     */
+    public function forPageAfterId($perPage = 15, $lastId = 0, $column = 'id')
+    {
+        $this->orders = Collection::make($this->orders)
+            ->reject(function ($order) use ($column) {
+                return $order['column'] === $column;
+            })->values()->all();
+        return $this->where($column, '>', $lastId)
+            ->orderBy($column, 'asc')
+            ->take($perPage);
+    }
 
     /**
      * Add a union statement to the query.
-     * @param  \Query\Builder|\Closure  $query
+     * @param  \Jeanku\Database\Query\Builder|\Closure  $query
      * @param  bool  $all
-     * @return \Query\Builder|static
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function union($query, $all = false)
     {
@@ -1249,8 +1218,8 @@ class Builder
 
     /**
      * Add a union all statement to the query.
-     * @param  \Query\Builder|\Closure  $query
-     * @return \Query\Builder|static
+     * @param  \Jeanku\Database\Query\Builder|\Closure  $query
+     * @return \Jeanku\Database\Query\Builder|static
      */
     public function unionAll($query)
     {
@@ -1273,7 +1242,7 @@ class Builder
 
     /**
      * Lock the selected rows in the table for updating.
-     * @return \Query\Builder
+     * @return \Jeanku\Database\Query\Builder
      */
     public function lockForUpdate()
     {
@@ -1282,7 +1251,7 @@ class Builder
 
     /**
      * Share lock the selected rows in the table.
-     * @return \Query\Builder
+     * @return \Jeanku\Database\Query\Builder
      */
     public function sharedLock()
     {
@@ -1328,25 +1297,9 @@ class Builder
      */
     public function first($columns = ['*'])
     {
-        $results = $this->take(1)->getData($columns);
-        $this->attributes = count($results) > 0 ? reset($results) : null;
-        if (is_array($this->attributes) && !empty($this->attributes)) {
-            foreach ($this->attributes as $key => $val) {
-                $this->{$key} = $val;
-            }
-        }
-        return $this->attributes ? $this : null;
+        $results = $this->take(1)->get($columns);
+        return count($results) > 0 ? reset($results) : null;
     }
-
-    /**
-     * Convert the model instance to an array.
-     * @return array
-     */
-    public function toArray()
-    {
-        return $this->attributes;
-    }
-
 
     /**
      * Execute the query as a "select" statement.
@@ -1355,31 +1308,10 @@ class Builder
      */
     public function get($columns = ['*'])
     {
-        $this->attributes = $this->getData($columns);
-        return $this;
-    }
-
-
-    /**
-     * Execute the query as a "select" statement.
-     * @param  array  $columns
-     * @return array|static[]
-     */
-    public function getData($columns = ['*'])
-    {
         is_null($this->columns) && $this->columns = $columns;
-        $model = $this->getModel();
-        if (!$this->trashed && $model->getSoftDelete())
-        {
-            if (count($this->joins) > 0) {
-                $this->where($model->getQualifiedStatusColumn(), '!=', $model->getInvalidStatus());
-            } else {
-                $this->where($model->getStatusColumn(), '!=', $model->getInvalidStatus());
-            }
-        }
         return $this->runSelect();
-    }
 
+    }
 
     /**
      * Run the query as a "select" statement against the connection.
@@ -1387,7 +1319,7 @@ class Builder
      */
     protected function runSelect()
     {
-        return $this->connection->select($this->toSql(), $this->getBindings());
+        return $this->connection->select($this->toSql(), $this->getBindings(), ! $this->useWritePdo);
     }
 
     /**
@@ -1457,13 +1389,13 @@ class Builder
      */
     public function chunk($count, callable $callback)
     {
-        $results = $this->forPage($page = 1, $count)->getData();
+        $results = $this->forPage($page = 1, $count)->get();
         while (count($results) > 0) {
             if (call_user_func($callback, $results) === false) {
                 return false;
             }
             $page++;
-            $results = $this->forPage($page, $count)->getData();
+            $results = $this->forPage($page, $count)->get();
         }
         return true;
     }
@@ -1480,13 +1412,13 @@ class Builder
     {
         $lastId = null;
         $alias = $alias ?: $column;
-        $results = $this->forPageAfterId($count, 0, $column)->getData();
+        $results = $this->forPageAfterId($count, 0, $column)->get();
         while (! empty($results)) {
             if (call_user_func($callback, $results) === false) {
                 return false;
             }
             $lastId = last($results)->{$alias};
-            $results = $this->forPageAfterId($count, $lastId, $column)->getData();
+            $results = $this->forPageAfterId($count, $lastId, $column)->get();
         }
         return true;
     }
@@ -1520,7 +1452,7 @@ class Builder
      */
     public function pluck($column, $key = null)
     {
-        $results = $this->getData(is_null($key) ? [$column] : [$column, $key]);
+        $results = $this->get(is_null($key) ? [$column] : [$column, $key]);
         return Arr::pluck(
             $results,
             $this->stripTableForPluck($column),
@@ -1651,7 +1583,7 @@ class Builder
         $previousColumns = $this->columns;
         $previousSelectBindings = $this->bindings['select'];
         $this->bindings['select'] = [];
-        $results = $this->getData($columns);
+        $results = $this->get($columns);
         $this->aggregate = null;
         $this->columns = $previousColumns;
         $this->bindings['select'] = $previousSelectBindings;
@@ -1691,17 +1623,13 @@ class Builder
         if (empty($values)) {
             return true;
         }
-        $updatecolumn = $this->model->getUpdatedAtColumn();
-        $createcolumn = $this->model->getCreatedAtColumn();
-        $time = $this->model->freshTimestamp();
         if (! is_array(reset($values))) {
             $values = [$values];
-        }
-        foreach ($values as $key => $value) {
-            ksort($value);
-            $values[$key] = $value;
-            $createcolumn && $values[$key][$createcolumn] = $time;
-            $updatecolumn && $values[$key][$updatecolumn] = $time;
+        } else {
+            foreach ($values as $key => $value) {
+                ksort($value);
+                $values[$key] = $value;
+            }
         }
         $bindings = [];
         foreach ($values as $record) {
@@ -1711,17 +1639,8 @@ class Builder
         }
         $sql = $this->grammar->compileInsert($this, $values);
         $bindings = $this->cleanBindings($bindings);
-
         return $this->connection->insert($sql, $bindings);
     }
-
-
-
-    public function create(array $values)
-    {
-        return $this->insert($values);
-    }
-
 
     /**
      * Insert a new record and get the value of the primary key.
@@ -1731,25 +1650,26 @@ class Builder
      */
     public function insertGetId(array $values, $sequence = null)
     {
-        $this->insert($values);
-        return $this->connection->lastInsertId();
+        $sql = $this->grammar->compileInsertGetId($this, $values, $sequence);
+        $values = $this->cleanBindings($values);
+        return $this->processInsertGetId($this, $sql, $values, $sequence);
     }
 
 
-//    /**
-//     * Process an  "insert get ID" query.
-//     * @param  \Query\Builder  $query
-//     * @param  string  $sql
-//     * @param  array   $values
-//     * @param  string  $sequence
-//     * @return int
-//     */
-//    public function processInsertGetId(Builder $query, $sql, $values, $sequence = null)
-//    {
-//        $query->getConnection()->insert($sql, $values);
-//        $id = $query->connection()->getPdo()->lastInsertId($sequence);
-//        return is_numeric($id) ? (int) $id : $id;
-//    }
+    /**
+     * Process an  "insert get ID" query.
+     * @param  \Jeanku\Database\Query\Builder  $query
+     * @param  string  $sql
+     * @param  array   $values
+     * @param  string  $sequence
+     * @return int
+     */
+    public function processInsertGetId(Builder $query, $sql, $values, $sequence = null)
+    {
+        $query->getConnection()->insert($sql, $values);
+        $id = $query->getConnection()->getPdo()->lastInsertId($sequence);
+        return is_numeric($id) ? (int) $id : $id;
+    }
 
     /**
      * Update a record in the database.
@@ -1759,8 +1679,6 @@ class Builder
      */
     public function update(array $values)
     {
-        $column = $this->model->getUpdatedAtColumn();
-        $column && empty($values[$column]) && $values[$column] = $this->model->freshTimestamp();
         $bindings = array_values(array_merge($values, $this->getBindings()));
         $sql = $this->grammar->compileUpdate($this, $values);
         return $this->connection->update($sql, $this->cleanBindings($bindings));
@@ -1791,7 +1709,7 @@ class Builder
      */
     public function increment($column, $amount = 1, array $extra = [])
     {
-        if (!is_numeric($amount)) {
+        if (! is_numeric($amount)) {
             throw new \Exception('Non-numeric value passed to increment method.', -1);
         }
         $wrapped = $this->grammar->wrap($column);
@@ -1824,9 +1742,6 @@ class Builder
      */
     public function delete($id = null)
     {
-        if ($this->getModel()->getSoftDelete()) {                                            //是否有软删
-            return $this->softDelete();
-        }
         if (! is_null($id)) {
             $this->where('id', '=', $id);
         }
@@ -1834,10 +1749,20 @@ class Builder
         return $this->connection->delete($sql, $this->getBindings());
     }
 
+    /**
+     * Run a truncate statement on the table.
+     * @return void
+     */
+    public function truncate()
+    {
+        foreach ($this->grammar->compileTruncate($this) as $sql => $bindings) {
+            $this->connection->statement($sql, $bindings);
+        }
+    }
 
     /**
      * Get a new instance of the query builder.
-     * @return \Query\Builder
+     * @return \Jeanku\Database\Query\Builder
      */
     public function newQuery()
     {
@@ -1872,11 +1797,11 @@ class Builder
     /**
      * Create a raw database expression.
      * @param  mixed  $value
-     * @return \Query\Expression
+     * @return \Jeanku\Database\Query\Expression
      */
     public function raw($value)
     {
-        return new Expression($value);
+        return $this->connection->raw($value);
     }
 
     /**
@@ -1937,7 +1862,7 @@ class Builder
 
     /**
      * Merge an array of bindings into our bindings.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @return $this
      */
     public function mergeBindings(Builder $query)
@@ -1946,10 +1871,9 @@ class Builder
         return $this;
     }
 
-
     /**
      * Get the database connection instance.
-     * @return \ConnectionInterface
+     * @return \Jeanku\Database\ConnectionInterface
      */
     public function getConnection()
     {
@@ -1959,7 +1883,7 @@ class Builder
 
     /**
      * Get the query grammar instance.
-     * @return \Query\Grammars\Grammar
+     * @return \Jeanku\Database\Query\Grammars\Grammar
      */
     public function getGrammar()
     {
@@ -1977,103 +1901,6 @@ class Builder
         return $this;
     }
 
-
-    /**
-     * start a transaction.
-     * @param function $callback callback function
-     * @return array
-     */
-    public function transaction($callback)
-    {
-         return $this->getConnection()->transaction($callback);
-    }
-
-    /**
-     * Register a new global scope.
-     *
-     * @param  string  $identifier
-     * @param  \Eloquent\Scope|\Closure  $scope
-     * @return $this
-     */
-    public function withGlobalScope($identifier, $scope)
-    {
-        $this->scopes[$identifier] = $scope;
-        if (method_exists($scope, 'extend')) {
-            $scope->extend($this);
-        }
-        return $this;
-    }
-
-    /**
-     * Extend the builder with a given callback.
-     *
-     * @param  string    $name
-     * @param  \Closure  $callback
-     * @return void
-     */
-    public function macro($name, Closure $callback)
-    {
-        $this->macros[$name] = $callback;
-    }
-
-
-    /**
-     * 检查是否注册了宏.
-     *
-     * @param  string $name
-     * @return bool
-     */
-    public function hasMacro($name)
-    {
-        return isset($this->macros[$name]);
-    }
-
-
-    /**
-     * 删除数据筛选
-     * @return this
-     */
-    public function onlyTrashed()
-    {
-        $this->trashed = true;
-        $model = $this->getModel();
-        if ($model->getSoftDelete()) {
-            if (count($this->joins) > 0) {
-                $this->where($model->getQualifiedStatusColumn(), '=', $model->getInvalidStatus());
-            } else {
-                $this->where($model->getStatusColumn(), '=', $model->getInvalidStatus());
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * 所有数据筛选
-     * @return this
-     */
-    public function withTrashed()
-    {
-        $this->trashed = true;
-        return $this;
-    }
-
-
-    /**
-     * soft delete
-     * @return this
-     */
-    public function softDelete()
-    {
-        $model = $this->getModel();
-        $column = $model->getStatusColumn();
-        $deletedAtColumn = $model->getDeletedAtColumn();
-        $data = array(
-            $column => $model->getInvalidStatus(),
-        );
-        $deletedAtColumn && $data[$deletedAtColumn] = $model->freshTimestampString();         // 更新删除时间
-        return $this->update($data);
-    }
-
     /**
      * Handle dynamic method calls into the method.
      * @param  string  $method
@@ -2083,11 +1910,13 @@ class Builder
      */
     public function __call($method, $parameters)
     {
+        if (static::hasMacro($method)) {
+            return $this->macroCall($method, $parameters);
+        }
         if (Str::startsWith($method, 'where')) {
             return $this->dynamicWhere($method, $parameters);
         }
         $className = static::class;
         throw new \Exception("Call to undefined method {$className}::{$method}()");
     }
-
 }

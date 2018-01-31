@@ -1,6 +1,6 @@
 <?php
 
-namespace Query;
+namespace Jeanku\Database\Query;
 
 class Expression
 {

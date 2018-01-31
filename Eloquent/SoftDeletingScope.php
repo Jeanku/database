@@ -1,8 +1,8 @@
 <?php
 
-namespace Eloquent;
+namespace Jeanku\Database\Eloquent;
 
-class SoftDeletingScope
+class SoftDeletingScope implements Scope
 {
 
 
@@ -11,7 +11,7 @@ class SoftDeletingScope
      *
      * @var array
      */
-    protected $extensions = ['ForceDelete', 'Restore', 'WithTrashed', 'OnlyTrashed', 'delete'];
+    protected $extensions = ['ForceDelete', 'Restore', 'WithTrashed', 'OnlyTrashed'];
 
 
     /**
@@ -21,7 +21,7 @@ class SoftDeletingScope
      * @param  $model
      * @return void
      */
-    public function apply($builder, Model $model)
+    public function apply(Builder $builder, Model $model)
     {
         $builder->where($model->getQualifiedStatusColumn(), '!=', $this->getInvalidStatus($builder));
     }
@@ -32,11 +32,21 @@ class SoftDeletingScope
      * @param $builder
      * @return void
      */
-    public function extend($builder)
+    public function extend(Builder $builder)
     {
         foreach ($this->extensions as $extension) {
             $this->{"add{$extension}"}($builder);
         }
+
+        $builder->onDelete(function (Builder $builder) {                                                        //覆盖删除方法，达到软删除效果
+            $column = $this->getStatusColumn($builder);
+            $deletedAtColumn = $this->getDeletedAtColumn($builder);
+            $data = array(
+                $column => $this->getInvalidStatus($builder),
+            );
+            $deletedAtColumn && $data[$deletedAtColumn] = $builder->getModel()->freshTimestampString();         // 更新删除时间
+            return $builder->update($data);
+        });
     }
 
     /**
@@ -47,13 +57,13 @@ class SoftDeletingScope
      * @param  $builder
      * @return string
      */
-    protected function getStatusColumn($builder)
+    protected function getStatusColumn(Builder $builder)
     {
-//        if (count($builder->joins) > 0) {
-//            return $builder->getModel()->getQualifiedStatusColumn();
-//        } else {
+        if (count($builder->getQuery()->joins) > 0) {
+            return $builder->getModel()->getQualifiedStatusColumn();
+        } else {
             return $builder->getModel()->getStatusColumn();
-//        }
+        }
     }
 
     /**
@@ -64,13 +74,13 @@ class SoftDeletingScope
      * @param  $builder
      * @return string
      */
-    protected function getDeletedAtColumn($builder)
+    protected function getDeletedAtColumn(Builder $builder)
     {
-//        if (count($builder->getQuery()->joins) > 0) {
-//            return $builder->getModel()->getQualifiedDeletedAtColumn();
-//        } else {
+        if (count($builder->getQuery()->joins) > 0) {
+            return $builder->getModel()->getQualifiedDeletedAtColumn();
+        } else {
             return $builder->getModel()->getDeletedAtColumn();
-//        }
+        }
     }
 
     /**
@@ -81,7 +91,7 @@ class SoftDeletingScope
      * @param  $builder
      * @return string
      */
-    protected function getInvalidStatus($builder)
+    protected function getInvalidStatus(Builder $builder)
     {
         return $builder->getModel()->getInvalidStatus();
     }
@@ -95,32 +105,10 @@ class SoftDeletingScope
      * @param  $builder
      * @return void
      */
-    protected function addForceDelete($builder)
+    protected function addForceDelete(Builder $builder)
     {
-        $builder->macro('forceDelete', function ($builder) {
-            return $builder->delete();
-        });
-    }
-
-
-    /**
-     * 增加强制删除方法
-     *
-     * @author gaojian
-     * @date   2017-10-26
-     * @param  $builder
-     * @return void
-     */
-    protected function addDelete($builder)
-    {
-        $builder->macro('delete', function ($builder) {                                                        //覆盖删除方法，达到软删除效果
-            $column = $this->getStatusColumn($builder);
-            $deletedAtColumn = $this->getDeletedAtColumn($builder);
-            $data = array(
-                $column => $this->getInvalidStatus($builder),
-            );
-            $deletedAtColumn && $data[$deletedAtColumn] = $builder->getModel()->freshTimestampString();         // 更新删除时间
-            return $builder->update($data);
+        $builder->macro('forceDelete', function (Builder $builder) {
+            return $builder->getQuery()->delete();
         });
     }
 
@@ -132,9 +120,9 @@ class SoftDeletingScope
      * @param  $builder
      * @return void
      */
-    protected function addRestore($builder)
+    protected function addRestore(Builder $builder)
     {
-        $builder->macro('restore', function ($builder, $defaultValue = 1) {
+        $builder->macro('restore', function (Builder $builder, $defaultValue = 1) {
             $builder->withTrashed();
             return $builder->update(array($builder->getModel()->getStatusColumn() => $defaultValue));
         });
@@ -148,10 +136,10 @@ class SoftDeletingScope
      * @param  $builder
      * @return void
      */
-    protected function addWithTrashed($builder)
+    protected function addWithTrashed(Builder $builder)
     {
-        $builder->macro('withTrashed', function ($builder) {
-            return $builder;
+        $builder->macro('withTrashed', function (Builder $builder) {
+            return $builder->withoutGlobalScope($this);
         });
     }
 
@@ -163,11 +151,11 @@ class SoftDeletingScope
      * @param  $builder
      * @return void
      */
-    protected function addOnlyTrashed($builder)
+    protected function addOnlyTrashed(Builder $builder)
     {
-        $builder->macro('onlyTrashed', function ($builder) {
+        $builder->macro('onlyTrashed', function (Builder $builder) {
             $model = $builder->getModel();
-            $builder->where($model->getQualifiedStatusColumn(), $this->getInvalidStatus($builder));
+            $builder->withoutGlobalScope($this)->where($model->getQualifiedStatusColumn(), $this->getInvalidStatus($builder));
             return $builder;
         });
     }

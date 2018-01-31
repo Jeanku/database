@@ -1,5 +1,5 @@
 <?php
-namespace Support;
+namespace Jeanku\Database\Support;
 
 interface Arrayable
 {

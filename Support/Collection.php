@@ -1,6 +1,6 @@
 <?php
 
-namespace Support;
+namespace Jeanku\Database\Support;
 
 
 class Collection implements Arrayable

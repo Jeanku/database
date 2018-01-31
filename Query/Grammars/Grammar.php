@@ -1,9 +1,9 @@
 <?php
 
-namespace Query\Grammars;
+namespace Jeanku\Database\Query\Grammars;
 
-use Query\Builder;
-use Query\Expression;
+use Jeanku\Database\Query\Builder;
+use Jeanku\Database\Query\Expression;
 
 class Grammar
 {
@@ -39,10 +39,9 @@ class Grammar
         'lock',
     ];
 
-
     /**
      * Compile a select query into SQL.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @return string
      */
     public function compileSelect(Builder $query)
@@ -58,7 +57,7 @@ class Grammar
 
     /**
      * Compile the components necessary for a select clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @return array
      */
     protected function compileComponents(Builder $query)
@@ -76,7 +75,7 @@ class Grammar
 
     /**
      * Compile an aggregated select clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $aggregate
      * @return string
      */
@@ -91,7 +90,7 @@ class Grammar
 
     /**
      * Compile the "select *" portion of the query.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $columns
      * @return string|null
      */
@@ -106,7 +105,7 @@ class Grammar
 
     /**
      * Compile the "from" portion of the query.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  string  $table
      * @return string
      */
@@ -117,7 +116,7 @@ class Grammar
 
     /**
      * Compile the "join" portions of the query.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $joins
      * @return string
      */
@@ -184,7 +183,7 @@ class Grammar
 
     /**
      * Compile the "where" portions of the query.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @return string
      */
     protected function compileWheres(Builder $query)
@@ -207,7 +206,7 @@ class Grammar
 
     /**
      * Compile a nested where clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -219,7 +218,7 @@ class Grammar
 
     /**
      * Compile a where condition with a sub-select.
-     * @param  \Query\Builder $query
+     * @param  \Jeanku\Database\Query\Builder $query
      * @param  array   $where
      * @return string
      */
@@ -232,7 +231,7 @@ class Grammar
     /**
      * Compile a basic where clause.
      *
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -245,7 +244,7 @@ class Grammar
 
     /**
      * Compile a where clause comparing two columns..
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -258,7 +257,7 @@ class Grammar
 
     /**
      * Compile a "between" where clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -271,7 +270,7 @@ class Grammar
 
     /**
      * Compile a where exists clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -282,7 +281,7 @@ class Grammar
 
     /**
      * Compile a where exists clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -293,7 +292,7 @@ class Grammar
 
     /**
      * Compile a "where in" clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -308,7 +307,7 @@ class Grammar
 
     /**
      * Compile a "where not in" clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -323,7 +322,7 @@ class Grammar
 
     /**
      * Compile a where in sub-select clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -336,7 +335,7 @@ class Grammar
 
     /**
      * Compile a where not in sub-select clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -349,7 +348,7 @@ class Grammar
 
     /**
      * Compile a "where null" clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -360,7 +359,7 @@ class Grammar
 
     /**
      * Compile a "where not null" clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -371,7 +370,7 @@ class Grammar
 
     /**
      * Compile a "where date" clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -382,7 +381,7 @@ class Grammar
 
     /**
      * Compile a "where time" clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -393,7 +392,7 @@ class Grammar
 
     /**
      * Compile a "where day" clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -404,7 +403,7 @@ class Grammar
 
     /**
      * Compile a "where month" clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -415,7 +414,7 @@ class Grammar
 
     /**
      * Compile a "where year" clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -427,7 +426,7 @@ class Grammar
     /**
      * Compile a date based where clause.
      * @param  string  $type
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -439,7 +438,7 @@ class Grammar
 
     /**
      * Compile a raw where clause.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $where
      * @return string
      */
@@ -450,7 +449,7 @@ class Grammar
 
     /**
      * Compile the "group by" portions of the query.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $groups
      * @return string
      */
@@ -461,7 +460,7 @@ class Grammar
 
     /**
      * Compile the "having" portions of the query.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $havings
      * @return string
      */
@@ -498,7 +497,7 @@ class Grammar
 
     /**
      * Compile the "order by" portions of the query.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $orders
      * @return string
      */
@@ -525,7 +524,7 @@ class Grammar
 
     /**
      * Compile the "limit" portions of the query.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  int  $limit
      * @return string
      */
@@ -536,7 +535,7 @@ class Grammar
 
     /**
      * Compile the "offset" portions of the query.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  int  $offset
      * @return string
      */
@@ -547,7 +546,7 @@ class Grammar
 
     /**
      * Compile the "union" queries attached to the main query.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @return string
      */
     protected function compileUnions(Builder $query)
@@ -583,7 +582,7 @@ class Grammar
     /**
      * Compile an exists statement into SQL.
      *
-     * @param \Query\Builder $query
+     * @param \Jeanku\Database\Query\Builder $query
      * @return string
      */
     public function compileExists(Builder $query)
@@ -595,7 +594,7 @@ class Grammar
 
     /**
      * Compile an insert statement into SQL.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $values
      * @return string
      */
@@ -616,7 +615,7 @@ class Grammar
 
     /**
      * Compile an insert and get ID statement into SQL.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array   $values
      * @param  string  $sequence
      * @return string
@@ -628,7 +627,7 @@ class Grammar
 
     /**
      * Compile an update statement into SQL.
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  array  $values
      * @return string
      */
@@ -664,7 +663,7 @@ class Grammar
     /**
      * Compile a delete statement into SQL.
      *
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @return string
      */
     public function compileDelete(Builder $query)
@@ -679,7 +678,7 @@ class Grammar
     /**
      * Compile a truncate table statement into SQL.
      *
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @return array
      */
     public function compileTruncate(Builder $query)
@@ -690,7 +689,7 @@ class Grammar
     /**
      * Compile the lock into SQL.
      *
-     * @param  \Query\Builder  $query
+     * @param  \Jeanku\Database\Query\Builder  $query
      * @param  bool|string  $value
      * @return string
      */
@@ -779,7 +778,7 @@ class Grammar
     /**
      * Wrap a table in keyword identifiers.
      *
-     * @param  \Query\Expression|string  $table
+     * @param  \Jeanku\Database\Query\Expression|string  $table
      * @return string
      */
     public function wrapTable($table)
@@ -792,7 +791,7 @@ class Grammar
 
     /**
      * Wrap a value in keyword identifiers.
-     * @param  \Query\Expression|string  $value
+     * @param  \Jeanku\Database\Query\Expression|string  $value
      * @param  bool    $prefixAlias
      * @return string
      */
