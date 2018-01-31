@@ -36,6 +36,6 @@ database.php:
                     'prefix' => '',
                     'strict' => false,
                     'engine' => null,
-              ),
-          ),
+              )
+          )
       );
