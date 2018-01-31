@@ -9,10 +9,10 @@ use:
 
 config:
    database.php:
-      return [
+      return array(
           'default' => 'database1',
-          'connections' => [
-              'database1' => [
+          'connections' => (
+              'database1' => array(
                   'driver' => 'mysql',
                   'host' => '0.0.0.0',
                   'port' => '3306',
@@ -24,8 +24,8 @@ config:
                   'prefix' => '',
                   'strict' => false,
                   'engine' => null,
-              ],
-              'database2' => [
+              ),
+              'database2' => array(
                     'driver' => 'mysql',
                     'host' => '0.0.0.0',
                     'port' => '3306',
@@ -37,6 +37,6 @@ config:
                     'prefix' => '',
                     'strict' => false,
                     'engine' => null,
-              ],
-          ],
-      ];
+              ),
+          ),
+      );
