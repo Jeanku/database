@@ -1,6 +1,6 @@
 # database
 
-composer address:
+composer:
  composer require jeanku/database:dev-master
 
 set config at entrance file(index.php):
