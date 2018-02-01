@@ -14,11 +14,8 @@ you can extend the model as follow:
 then you can use it as laravel model:
  $data = CoachModel::where('id', 10001)->get()->toArray();
 
-# DB
-if you wantto use laravel DB to do sth, then you can use the class as this:
- use Jeanku\Database\DatabaseManager as DB;
-then you can use it as laravel DB:
- $data = DB::table('table')->where('id', 10001)->get();
+
+
  
 	
 
