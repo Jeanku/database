@@ -323,11 +323,11 @@ class Arr
         $results = [];
         list($value, $key) = static::explodePluckParameters($value, $key);
         foreach ($array as $item) {
-            $itemValue = data_get($item, $value);
+            $itemValue = self::data_get($item, $value);
             if (is_null($key)) {
                 $results[] = $itemValue;
             } else {
-                $itemKey = data_get($item, $key);
+                $itemKey = self::data_get($item, $key);
                 $results[$itemKey] = $itemValue;
             }
         }
@@ -454,5 +454,39 @@ class Arr
             }
         }
         return $filtered;
+    }
+
+
+    function data_get($target, $key, $default = null)
+    {
+        if (is_null($key)) {
+            return $target;
+        }
+
+        $key = is_array($key) ? $key : explode('.', $key);
+
+        while (($segment = array_shift($key)) !== null) {
+            if ($segment === '*') {
+                if ($target instanceof Collection) {
+                    $target = $target->all();
+                } elseif (! is_array($target)) {
+                    return value($default);
+                }
+
+                $result = Arr::pluck($target, $key);
+
+                return in_array('*', $key) ? Arr::collapse($result) : $result;
+            }
+
+            if (Arr::accessible($target) && Arr::exists($target, $segment)) {
+                $target = $target[$segment];
+            } elseif (is_object($target) && isset($target->{$segment})) {
+                $target = $target->{$segment};
+            } else {
+                return value($default);
+            }
+        }
+
+        return $target;
     }
 }
