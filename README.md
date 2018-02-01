@@ -1,4 +1,3 @@
-# Database
 ## Install
 
 Via Composer
@@ -10,7 +9,9 @@ Via Composer
 
 # initialization
 you can set database config at entrance file(index.php) as follow:
+``` bash
 \Jeanku\Database\DatabaseManager::make(WEBPATH . '/config/database.php');
+```
 
 # extend model
 you can extend the model as follow:
