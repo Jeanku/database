@@ -1,4 +1,4 @@
-forgive me my poor english, god bless you can understand what i am saying
+forgive my poor english, may god bless you understand what i am saying
 
 # composer
  composer require jeanku/database:dev-master
