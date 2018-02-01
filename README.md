@@ -1,7 +1,12 @@
-forgive my poor english, may god bless you understand what i am saying
+# Database
+## Install
 
-# composer
+Via Composer
+
+``` bash
  composer require jeanku/database:dev-master
+```
+
 
 # initialization
 you can set database config at entrance file(index.php) as follow:
