@@ -140,7 +140,7 @@ class Arr
     public static function first($array, callable $callback = null, $default = null)
     {
         if (is_null($callback)) {
-            return empty($array) ? value($default) : reset($array);
+            return empty($array) ? $default : reset($array);
         }
 
         foreach ($array as $key => $value) {
@@ -149,7 +149,7 @@ class Arr
             }
         }
 
-        return value($default);
+        return $default;
     }
 
     /**
@@ -162,7 +162,7 @@ class Arr
     public static function last($array, callable $callback = null, $default = null)
     {
         if (is_null($callback)) {
-            return empty($array) ? value($default) : end($array);
+            return empty($array) ? $default : end($array);
         }
         return static::first(array_reverse($array), $callback, $default);
     }
@@ -242,7 +242,7 @@ class Arr
     public static function get($array, $key, $default = null)
     {
         if (! static::accessible($array)) {
-            return value($default);
+            return $default;
         }
         if (is_null($key)) {
             return $array;
@@ -254,7 +254,7 @@ class Arr
             if (static::accessible($array) && static::exists($array, $segment)) {
                 $array = $array[$segment];
             } else {
-                return value($default);
+                return $default;
             }
         }
         return $array;
