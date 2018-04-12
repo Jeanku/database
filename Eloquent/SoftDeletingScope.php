@@ -45,7 +45,7 @@ class SoftDeletingScope implements Scope
                 $column => $this->getInvalidStatus($builder),
             );
             $deletedAtColumn && $data[$deletedAtColumn] = $builder->getModel()->freshTimestampString();         // 更新删除时间
-            return $builder->update($data);
+            return $builder->update($data) ? true : false;
         });
     }
 
@@ -59,7 +59,8 @@ class SoftDeletingScope implements Scope
      */
     protected function getStatusColumn(Builder $builder)
     {
-        if (count($builder->getQuery()->joins) > 0) {
+        $join = $builder->getQuery()->joins;
+        if ($join && count($join) > 0) {
             return $builder->getModel()->getQualifiedStatusColumn();
         } else {
             return $builder->getModel()->getStatusColumn();
@@ -76,7 +77,8 @@ class SoftDeletingScope implements Scope
      */
     protected function getDeletedAtColumn(Builder $builder)
     {
-        if (count($builder->getQuery()->joins) > 0) {
+        $join = $builder->getQuery()->joins;
+        if ($join && count($join) > 0) {
             return $builder->getModel()->getQualifiedDeletedAtColumn();
         } else {
             return $builder->getModel()->getDeletedAtColumn();

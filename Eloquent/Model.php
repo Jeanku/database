@@ -184,7 +184,6 @@ abstract class Model implements Arrayable
     //表的创建时间字段
     const CREATED_AT = 'create_time';
 
-
     //表的更新时间字段
     const UPDATED_AT = 'update_time';
 

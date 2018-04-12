@@ -15,7 +15,7 @@ class Arr
      */
     public static function accessible($value)
     {
-//        return is_array($value) || $value instanceof ArrayAccess;
+        return is_array($value) || $value instanceof ArrayAccess;
     }
 
     /**
@@ -457,7 +457,7 @@ class Arr
     }
 
 
-    function data_get($target, $key, $default = null)
+    public static function data_get($target, $key, $default = null)
     {
         if (is_null($key)) {
             return $target;
