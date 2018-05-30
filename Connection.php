@@ -467,7 +467,6 @@ class Connection
         try {
             $result = $this->runQueryCallback($query, $bindings, $callback);
         } catch (\Exception $e) {
-//            \Supercoach\Util\Log::warning("【SQL】:" . $e->getMessage());
             throw new \Exception('sql not valid exception', -1);
         }
         $time = $this->getElapsedTime($start);
@@ -553,7 +552,7 @@ class Connection
     public function logQuery($query, $bindings, $time = null)
     {
         $query = vsprintf(str_replace('?', '%s', $query), $bindings);
-//        \Supercoach\Util\Log::notice("【SQL】:$query; 【time】:{$time}");
+        app('log')::notice("【SQL】:$query; 【time】:{$time}");
     }
 
 

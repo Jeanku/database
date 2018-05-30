@@ -34,13 +34,6 @@ class DatabaseManager
     public static $instance = null;                                         //单例模式
 
 
-    public static function make($path)
-    {
-        if (empty(self::$config)) {
-            self::$config = require($path);
-        }
-    }
-
     /**
      * Create a new database manager instance.
      *
@@ -199,7 +192,7 @@ class DatabaseManager
     protected function getConfig($name)
     {
         $name = $name ?: $this->getDefaultConnection();
-        $connections = self::$config['connections'];
+        $connections = app('config')::get('database', 'connections');
         if (empty($connections[$name])) {
             throw new \Exception("Database [$name] not configured.", -1);
         }
@@ -213,7 +206,7 @@ class DatabaseManager
      */
     public function getDefaultConnection()
     {
-        return self::$config['default'];
+        return app('config')::get('database', 'default');
     }
 
     /**
@@ -224,7 +217,7 @@ class DatabaseManager
      */
     public function setDefaultConnection($name)
     {
-        $this->app['config']['database.default'] = $name;
+//        $this->app['config']['database.default'] = $name;
     }
 
     /**
